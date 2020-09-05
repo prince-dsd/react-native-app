@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## Welcome
 
 [Video](https://imgur.com/a/pNA1vTY)
 
