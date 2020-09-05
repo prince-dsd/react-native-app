@@ -1,6 +1,6 @@
 ## Welcome
 
-[Video](https://imgur.com/a/pNA1vTY)
+
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
