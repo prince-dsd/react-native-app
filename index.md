@@ -1,7 +1,7 @@
 ## Welcome to GitHub Pages
 
-<video width="320" height="240" controls>
-  <source type="video/mp4" src="https://github.com/sudo-corvus/react-native-app/blob/master/demo/demo.m4v">
+<video width="600" height="800" controls>
+  <source type="video/mp4" src="https://imgur.com/a/pNA1vTY">
 </video>
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
