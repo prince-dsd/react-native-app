@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Video} from 'react-native-video';
-const Stream = ({playbackUrl}) => {
+import {View, StyleSheet, Text} from 'react-native';
+import Video from 'react-native-video';
+export const StreamVideo = ({stream}) => {
   return (
-    <View>
+    <View style={styles.backgroundVideo}>
       <Video
         source={{
-          uri: playbackUrl,
+          uri: stream.playbackUrl,
         }}
         style={styles.backgroundVideo}
         rate={1}
@@ -28,5 +28,3 @@ const styles = StyleSheet.create({
     right: 0,
   },
 });
-
-export default Stream;

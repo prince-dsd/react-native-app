@@ -5,7 +5,7 @@ import {
 } from './types';
 
 const initialState = {
-  streams: [],
+  streamData: [],
   isLoading: false,
   error: {},
 };
@@ -21,7 +21,7 @@ const streamDataReducer = (state = initialState, {type, payload}) => {
       return {
         ...state,
         isLoading: false,
-        streams: payload,
+        streamData: [...state.streamData, ...payload],
       };
     case FETCH_DATA_FAILURE:
       return {
@@ -29,6 +29,9 @@ const streamDataReducer = (state = initialState, {type, payload}) => {
         isLoading: false,
         error: payload,
       };
+
+    default:
+      return state;
   }
 };
 

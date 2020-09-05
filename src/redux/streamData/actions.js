@@ -4,17 +4,17 @@ import {
   FETCH_DATA_FAILURE,
 } from './types';
 
-import api from 'utils/api';
+import api from '../../utils/api';
 
-export const getStreamData = (page = 0) => async (dispatch) => {
+export const getStreamData = (page) => async (dispatch) => {
   try {
     dispatch(fetchDataRequest());
-    const response = api.post(
+    const response = await api.post(
       'https://europe-west1-boom-dev-7ad08.cloudfunctions.net/videoFeed',
       {page: page},
     );
 
-    const streamData = response.data;
+    const streamData = await response.data;
     dispatch(fetchDataSucces(streamData));
   } catch (err) {
     dispatch(fetchDataFailure(err.message));

@@ -1,21 +1,24 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, StyleSheet, View, Dimensions} from 'react-native';
-import {RecyclerListView, DataProvider, LayoutProvider} from 'recyclerlistview';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  Dimensions,
+  RefreshControl,
+} from 'react-native';
+import {RecyclerListView, LayoutProvider, DataProvider} from 'recyclerlistview';
+import {connect} from 'react-redux';
+import {StreamVideo} from '../Stream/Stream';
+//actions
+import {getStreamData} from '../redux/streamData/actions';
 
-import Stream from './Stream/Stream';
-
-import axios from 'axios';
-
-const StreamView = () => {
-  const [isLoading, setLoading] = useState(true);
-  const [page, setPage] = useState(0);
-  const [data, setData] = useState([]);
-  const [dataProvider, setDataProvider] = React.useState(
+const StreamView = ({getAllStreams, isLoading, streamData}) => {
+  const [dataProvider, setDataProvider] = useState(
     new DataProvider((r1, r2) => {
       return r1 !== r2;
     }),
   );
-
+  const [page, setPage] = useState(0);
   const {width, height} = Dimensions.get('screen');
   const [layoutProvider] = useState(
     new LayoutProvider(
@@ -27,57 +30,30 @@ const StreamView = () => {
     ),
   );
 
-  const fetchMoreData = async (page) => {
-    try {
-      let response = await axios.post(
-        'https://europe-west1-boom-dev-7ad08.cloudfunctions.net/videoFeed',
-        {page: page},
-      );
-
-      setLoading(false);
-
-      console.log(response.data);
-
-      setDataProvider((prevState) =>
-        prevState.cloneWithRows(data.concat(response.data)),
-      );
-      console.log(Object.keys(dataProvider).length);
-
-      setData(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   useEffect(() => {
-    (async () => {
-      try {
-        let response = await axios.post(
-          'https://europe-west1-boom-dev-7ad08.cloudfunctions.net/videoFeed',
-          {page: 0},
-        );
-
-        setLoading(false);
-
-        // console.log(response.data);
-
-        setDataProvider((prevState) =>
-          prevState.cloneWithRows(data.concat(response.data)),
-        );
-        console.log(Object.keys(dataProvider).length);
-        setData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
+    getAllStreams(page);
   }, []);
 
+  useEffect(() => {
+    setDataProvider((prevDataProvider) =>
+      prevDataProvider.cloneWithRows(streamData),
+    );
+  }, [streamData]);
+
+  useEffect(() => {
+    console.log(dataProvider._size);
+    console.log(streamData);
+  });
+
   const rowRenderer = (type, url) => {
-    return <Stream stream={url} />;
+    return <StreamVideo stream={url} />;
   };
+
   const handleReachedEnd = () => {
     setPage((prevPage) => prevPage + 1);
-    fetchMoreData(page);
+    if (page > 0) getAllStreams(page);
   };
+
   return (
     <View style={styles.viewStyles}>
       {isLoading ? (
@@ -89,8 +65,20 @@ const StreamView = () => {
             layoutProvider={layoutProvider}
             dataProvider={dataProvider}
             rowRenderer={rowRenderer}
-            renderAheadOffset={7680}
+            renderAheadOffset={0}
+            onEndReachedThreshold={500}
             onEndReached={handleReachedEnd}
+            scrollViewProps={{
+              refreshControl: (
+                <RefreshControl
+                  refreshing={isLoading}
+                  onRefresh={async () => {
+                    setPage(1);
+                    await getAllStreams(1);
+                  }}
+                />
+              ),
+            }}
           />
         </>
       )}
@@ -114,4 +102,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StreamView;
+const mapStateToProps = (state) => ({
+  isLoading: state.streams.isLoading,
+  streamData: state.streams.streamData,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getAllStreams: (page) => dispatch(getStreamData(page)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(StreamView);
