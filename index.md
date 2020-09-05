@@ -1,6 +1,6 @@
 ## Welcome to GitHub Pages
 
-<blockquote class="imgur-embed-pub" lang="en" data-id="a/pNA1vTY" data-context="false" ><a href="//imgur.com/a/pNA1vTY"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+[Video](https://imgur.com/a/pNA1vTY)
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
