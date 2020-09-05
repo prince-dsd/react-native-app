@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import Video from 'react-native-video';
 export const StreamVideo = ({stream}) => {
   return (
@@ -26,5 +26,8 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
+    borderRadius: 10,
+    margin: 5,
+    elevation: 5,
   },
 });

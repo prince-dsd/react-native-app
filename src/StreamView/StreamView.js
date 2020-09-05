@@ -22,17 +22,20 @@ const StreamView = ({getAllStreams, isLoading, streamData}) => {
   const {width, height} = Dimensions.get('screen');
   const [layoutProvider] = useState(
     new LayoutProvider(
-      (index) => 1,
+      (index) => 0,
       (type, dim) => {
         dim.width = width;
         dim.height = height;
       },
     ),
   );
+  const ViewTypes = {
+    FULL: 0,
+  };
 
   useEffect(() => {
     getAllStreams(page);
-  }, []);
+  }, [page, getAllStreams]);
 
   useEffect(() => {
     setDataProvider((prevDataProvider) =>
@@ -46,7 +49,12 @@ const StreamView = ({getAllStreams, isLoading, streamData}) => {
   });
 
   const rowRenderer = (type, url) => {
-    return <StreamVideo stream={url} />;
+    switch (type) {
+      case ViewTypes.FULL:
+        return <StreamVideo stream={url} />;
+      default:
+        return null;
+    }
   };
 
   const handleReachedEnd = () => {
@@ -73,7 +81,7 @@ const StreamView = ({getAllStreams, isLoading, streamData}) => {
                 <RefreshControl
                   refreshing={isLoading}
                   onRefresh={async () => {
-                    setPage(1);
+                    setPage(0);
                     await getAllStreams(1);
                   }}
                 />
@@ -93,12 +101,9 @@ const styles = StyleSheet.create({
   },
   viewStyles: {
     flex: 1,
-    padding: 10,
+    padding: 0,
     justifyContent: 'space-between',
-  },
-  videoView: {
-    flex: 1,
-    margin: 5,
+    backgroundColor: '#0c0c14',
   },
 });
 
